@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:convert' as convert;
+import 'package:http/http.dart' as http;
+import 'detail.dart';
 
 void main() {
   runApp(MyApp(
@@ -49,28 +52,39 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final entryItems = List<String>.generate(10000, (i) => "Item $i");
+  var entryItems = List<String>.generate(1, (i) => "Item $i");
   var items = List<String>();
 
   TextEditingController seachController = new TextEditingController();
 
-  @override
-  void initState() {
-    items.addAll(entryItems);
-    super.initState();
+  void networkInit() async {
+    try{
+      var url = "http://27.35.61.53:3000/password-rules"; //You should change this url for what you want.
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        var jsonResponse = convert.jsonDecode(convert.utf8.decode(response.bodyBytes));
+        entryItems.clear();
+        jsonResponse.forEach((data){
+          entryItems.add(data['name']);
+          print(data['name']);
+        });
+        setState(() {
+          items.clear();
+          items.addAll(entryItems);
+        });
+      } else {
+        print("Request failed with status: ${response.statusCode}.");
+      }
+    } catch(exception){
+      print(exception);
+    }
   }
 
-  void _addPasswordRule() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-
-
-
-    });
+  @override
+  void initState() {
+    networkInit();
+    //items.addAll(entryItems);
+    super.initState();
   }
 
   void _seachList(String searchValue) {
@@ -127,6 +141,12 @@ class _MyHomePageState extends State<MyHomePage> {
               itemBuilder: (context,index){
                 return ListTile(
                   title: Text('${items[index]}'),
+                  onTap: () {
+                    Navigator.push(
+                      context, 
+                      MaterialPageRoute(builder: (context) => Detail(index: index)),
+                    );
+                  },
                 );
               },
             ),
@@ -134,7 +154,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addPasswordRule,
+        onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Detail()),
+            );
+        },
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
