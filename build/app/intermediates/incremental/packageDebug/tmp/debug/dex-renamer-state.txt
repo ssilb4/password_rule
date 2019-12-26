@@ -1,4 +1,4 @@
-#Mon Dec 23 00:36:09 KST 2019
+#Wed Dec 25 20:51:25 KST 2019
 base.0=/home/himchan/Documents/workspace/password_rule/build/app/intermediates/transforms/dexMerger/debug/0
 path.0=classes.dex
 renamed.0=classes.dex

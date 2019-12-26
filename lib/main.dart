@@ -46,6 +46,7 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
+  
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -66,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
         entryItems.clear();
         jsonResponse.forEach((data){
           entryItems.add(data['name']);
-          print(data['name']);
+          //print(data['name']);
         });
         setState(() {
           items.clear();
@@ -119,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text('widget.title'),
       ),
       body: Column(
         children: [
@@ -138,13 +139,13 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
             child: ListView.builder(
               itemCount: items.length,
-              itemBuilder: (context,index){
+              itemBuilder: (context, index){
                 return ListTile(
                   title: Text('${items[index]}'),
                   onTap: () {
                     Navigator.push(
                       context, 
-                      MaterialPageRoute(builder: (context) => Detail(index: index)),
+                      MaterialPageRoute(builder: (context) => Detail(keyValue: items[index])),
                     );
                   },
                 );
@@ -157,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Detail()),
+              MaterialPageRoute(builder: (context) => Detail(keyValue: null)),
             );
         },
         tooltip: 'Increment',
